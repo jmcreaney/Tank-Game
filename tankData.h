@@ -37,6 +37,8 @@ class tankData{
   armor upHull;
   armor lwHull;
   
+  int choose();
+  
 
   
 public:

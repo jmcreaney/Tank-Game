@@ -197,8 +197,29 @@ void tankData::addLHull(armor& a){
 
 int tankData::gtAFnt(char l){
 
-   if(l == 't'){return turret.fnt;}
-   if(l == 'u'){return upHull.fnt;}
+   if(l == 't'){
+   		if(name.c_str() == "PzKw_Vd_Panther"){
+   			int x = choose();
+			   if(x==0){return 228;}else{return 118;}
+		} 
+		   		if(name.c_str() == "PzKw_Vg_Panther"){
+   			int x = choose();
+			   if(x==0){return 223;}else{return 105;}
+		} 
+		   		if(name.c_str() == "PzKw_VI_Tiger_I"){
+   			int x = choose();
+			   if(x==0){return 228;}else{return 110;}
+		}    
+   
+   		return turret.fnt;
+   }
+   if(l == 'u'){
+   		if(name.c_str() == "M4A3_Sherman(76)"){
+   			int x = choose();
+			   if(x==0){return 89;}else{return 141;}
+		}  
+		return upHull.fnt; 
+   }
    if(l == 'l'){return lwHull.fnt;}
    if(l == 's'){
       rdSpeed = 0;
@@ -210,8 +231,30 @@ int tankData::gtAFnt(char l){
 
 int tankData::gtAFnt45(char l){
 
-   if(l == 't'){return turret.fnt45;}
-   if(l == 'u'){return upHull.fnt45;}
+   if(l == 't'){
+   		if(name.c_str() == "PzKw_Vd_Panther"){
+   			int x = choose();
+			   if(x==0){return 376;}else{return 195;}
+		} 
+		   		if(name.c_str() == "PzKw_Vg_Panther"){
+   			int x = choose();
+			   if(x==0){return 368;}else{return 173;}
+		} 
+		   		if(name.c_str() == "PzKw_VI_Tiger_I"){
+   			int x = choose();
+			   if(x==0){return 360;}else{return 182;}
+		}    
+   		return turret.fnt45;
+		   
+	}
+	
+   if(l == 'u'){
+   		if(name.c_str() == "M4A3_Sherman(76)"){
+   			int x = choose();
+			   if(x==0){return 147;}else{return 233;}
+		}
+   return upHull.fnt45;
+   }
    if(l == 'l'){return lwHull.fnt45;}
    if(l == 's'){
       rdSpeed = 0;
@@ -281,5 +324,9 @@ char tankData::gtCntry(){
 		if(country == "British"){return 'b';}  	    
 }
 
-
+int tankData::choose(){
+	
+	return rand()%2;
+	
+}
   
