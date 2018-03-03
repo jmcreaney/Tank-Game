@@ -117,8 +117,9 @@ void resolveOFire(HWND hwnd){
 	for(int ff = 0; ff != 12; ff++){
 		for(std::vector<atOrder>::iterator itr = OverwatchOrders.begin();
 			itr != OverwatchOrders.end(); itr++){
-			
-				x(hwnd, ff, itr);
+				if(itr->dfLn >= 1){
+					x(hwnd, ff, itr);	
+				}
 				
 		}
 	}
@@ -156,6 +157,7 @@ char gthtAngle(int d){
 	if((d > 241) && (d >= 300)){a = 'c';}
 	if((d > 301) && (d >= 329)){a = 'b';}
 	
+	return 'e';
 }
 
 
@@ -182,11 +184,13 @@ void x(HWND hwnd, int ff, std::vector<atOrder>::iterator& itr){
 						
 					
 			int htRoll = roll(3);
-			if(data[itr->dfDB].gtSize() == 'h'){htRoll =+ 2;}
-			if(data[itr->dfDB].gtSize() == 'l'){htRoll =+ 1;}
-			if(data[itr->dfDB].gtSize() == 's'){htRoll =- 1;}
-			if(data[itr->dfDB].gtSize() == 'l'){htRoll =- 2;}
-			if(data[itr->dfDB].gtSize() == 'a'){htRoll =- 3;}
+			
+
+			if(data[itr->dfDB].gtSize() == 'h'){htRoll += 2;}
+			if(data[itr->dfDB].gtSize() == 'l'){htRoll += 1;}
+			if(data[itr->dfDB].gtSize() == 's'){htRoll -= 1;}
+			if(data[itr->dfDB].gtSize() == 'l'){htRoll -= 2;}
+			if(data[itr->dfDB].gtSize() == 'a'){htRoll -= 3;}
 
 			if(htRoll > hr){itr->hit =  true;}
 								
@@ -194,13 +198,16 @@ void x(HWND hwnd, int ff, std::vector<atOrder>::iterator& itr){
 					
 			if(itr->hit){
 				int htLoc = roll(2);
+
+
 				int tgAng;
-				char l = gthtAngle(dir);
+				char l;
 				int arm = 0;
 						
-				if(htLoc > 4){
+				if(htLoc < 5){
 					tgAng = dir + AFVs[itr->dfLn].gtTurFace();
 					if(tgAng > 360){tgAng=-180;}
+					l = gthtAngle(tgAng);
 								
 					if(htLoc == 2){
 						switch(l){
@@ -253,7 +260,8 @@ void x(HWND hwnd, int ff, std::vector<atOrder>::iterator& itr){
 				}	else {						
 								
 					tgAng = dir + AFVs[itr->dfLn].gtFace();
-					if(tgAng > 360){tgAng=-180;}
+					if(tgAng > 360){tgAng-=180;}
+					l = gthtAngle(tgAng);
 							
 					if((htLoc == 5) || (htLoc == 6)){
 						switch(l){
@@ -299,7 +307,7 @@ void x(HWND hwnd, int ff, std::vector<atOrder>::iterator& itr){
 										
 							case 'e':
 								arm = data[itr->dfDB].gtARear('u');
-							break;
+							break;							
 							}									
 						}	
 																	
@@ -375,7 +383,16 @@ void x(HWND hwnd, int ff, std::vector<atOrder>::iterator& itr){
 						}
 					}																																				
 				}
-							
+				
+/*				
+			char istr[3];
+			char istr2[3];
+			itoa(arm,istr,10);
+			itoa(dir,istr2,10);
+			
+			MessageBox(NULL, istr, "Marker!", MB_OK);
+			MessageBox(NULL, istr2, "Marker!", MB_OK);		
+		*/					
 				if(pen > arm){	
 					itr->pen = true;
 					AFVs[itr->dfLn].kill();
