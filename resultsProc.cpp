@@ -56,9 +56,9 @@ BOOL CALLBACK resultsProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){
 					strcat(msg,"The ");
 					strcat(msg, data[itr->dfDB].gtNameC());
 					int sze =  data[itr->dfDB].gtNameLen();
-		  			strcat(msg,"Was Destroyed!");
+		  			strcat(msg," Was Destroyed!");
 		  			
-		  			TextOut(hdc,5,rCnt, msg , sze +18);		  			
+		  			TextOut(hdc,5,rCnt, msg , sze +19);		  			
 					rCnt+=20;
 		  			
 				  }

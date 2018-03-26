@@ -60,6 +60,7 @@ public:
   bool gtOrder(char o);
   bool isPlaced(){return placed;}
   bool isMobile(){return IsMobile;}
+
  
   char gtOrder(){return order;}
   

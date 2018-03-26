@@ -94,21 +94,13 @@ void resolveFire(HWND hwnd){
 				x(hwnd, ff, itr);	
 		}
 	}
-	
+
 	// pull any destroyed tanks out of the overwatch orders.
-	for(std::vector<atOrder>::iterator itr = attackOrders.begin();
-		itr != attackOrders.end(); itr++){
-			
-		if(itr->pen){
-			for(std::vector<atOrder>::iterator itro = OverwatchOrders.begin();
-				itro != OverwatchOrders.end(); itr++){	
-					
-				if(itr->dfLn == itro->atLn){						
-					OverwatchOrders.erase(itro);						
-				}	
-			}
-		}				
-	}			
+
+	for(std::vector<atOrder>::iterator itro = OverwatchOrders.begin();
+		itro != OverwatchOrders.end(); itro++){		
+		if(!AFVs[itro->atLn].isAlive()){OverwatchOrders.erase(itro);}
+	}
 }
 
 
@@ -157,7 +149,7 @@ char gthtAngle(int d){
 	if((d > 241) && (d >= 300)){a = 'c';}
 	if((d > 301) && (d >= 329)){a = 'b';}
 	
-	return 'e';
+	return a;
 }
 
 
@@ -205,8 +197,11 @@ void x(HWND hwnd, int ff, std::vector<atOrder>::iterator& itr){
 				int arm = 0;
 						
 				if(htLoc < 5){
-					tgAng = dir + AFVs[itr->dfLn].gtTurFace();
-					if(tgAng > 360){tgAng=-180;}
+					dir-=90;
+					if(dir < 0){dir+=360;}	
+										
+					tgAng = dir  +  AFVs[itr->dfLn].gtTurFace();
+					if(tgAng > 360){tgAng-=360;}
 					l = gthtAngle(tgAng);
 								
 					if(htLoc == 2){
@@ -258,9 +253,11 @@ void x(HWND hwnd, int ff, std::vector<atOrder>::iterator& itr){
 					}
 
 				}	else {						
-								
-					tgAng = dir + AFVs[itr->dfLn].gtFace();
-					if(tgAng > 360){tgAng-=180;}
+					dir -= 90;
+					if(dir < 0){dir+=360;}		
+					tgAng = dir += AFVs[itr->dfLn].gtFace();
+					if(tgAng < 0){tgAng+=360;}
+					
 					l = gthtAngle(tgAng);
 							
 					if((htLoc == 5) || (htLoc == 6)){
@@ -384,19 +381,23 @@ void x(HWND hwnd, int ff, std::vector<atOrder>::iterator& itr){
 					}																																				
 				}
 				
+				
 /*				
 			char istr[3];
 			char istr2[3];
-			itoa(arm,istr,10);
-			itoa(dir,istr2,10);
+			itoa(tgAng,istr,10);
+			itoa(arm,istr2,10);
 			
 			MessageBox(NULL, istr, "Marker!", MB_OK);
 			MessageBox(NULL, istr2, "Marker!", MB_OK);		
-		*/					
-				if(pen > arm){	
-					itr->pen = true;
-					AFVs[itr->dfLn].kill();
-				}							
+	*/					
+				
+				
+				
+		if(pen > arm){	
+			itr->pen = true;
+			AFVs[itr->dfLn].kill();
+		}							
 							
 			}
 						

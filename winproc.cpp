@@ -300,6 +300,34 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){
 				 			
 				 	MessageBox(NULL, "All Tanks Placed", "Warning!",MB_OK);
 				} 
+				
+				bool allPlaced = true;
+								
+				for(std::vector<h_AFV>::iterator itr = AFVs.begin();
+					itr != AFVs.end(); itr++){
+						if(data[itr->gtDBI()].gtCntry() == manage->gtCurrent()){
+							if(!itr->isPlaced()){
+
+								allPlaced = false;															
+							}
+						}						
+					}
+				
+				if(allPlaced){					
+					manage->done();
+
+ 					if(manage->allDone()){
+						Phase = orders;
+ 						manage->swap();
+ 						manage->reset();
+ 						resetOrders();
+				
+					 }else{ 
+				 		manage->swap();;
+				 	}  					
+					
+					
+				}								
 					
 					InvalidateRect(hwnd,NULL,TRUE); 
          	}
@@ -326,7 +354,40 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){
                  			MessageBox(NULL, "Box Failed!", "Error!", MB_OK);}      
                  			manage->stCurrentTank(-1);
 					}	
-				}		
+				}	
+				
+				bool allOrders = true;	
+				//check if all tanks have orders then if so advance the turn	
+				
+				for(std::vector<h_AFV>::iterator itr = AFVs.begin();
+					itr != AFVs.end(); itr++){
+						if(data[itr->gtDBI()].gtCntry() == manage->gtCurrent()){
+							if(itr->gtMarked() == 0){
+
+								allOrders = false;
+															
+							}
+						}
+						
+					}
+				
+				if(allOrders){
+					
+					manage->done();
+
+ 					if(manage->allDone()){
+ 					if(attackOrders.size() == 0){Phase = resolve;}
+					    else{Phase = fire;}
+ 						manage->swap();
+ 						manage->reset();
+				
+					 }else{ 
+				 		manage->swap();
+				 		manage->stCurrentTank(-1);
+				 	}  					
+					
+					
+				}
 
                InvalidateRect(hwnd,NULL,FALSE); 
 			}

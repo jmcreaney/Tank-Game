@@ -209,7 +209,11 @@ int tankData::gtAFnt(char l){
 		   		if(name.c_str() == "PzKw_VI_Tiger_I"){
    			int x = choose();
 			   if(x==0){return 228;}else{return 110;}
-		}    
+		}   
+		   		if(name.c_str() == "PzKw_IIIj"){
+   			int x = choose();
+			   if(x==0){return 104;}else{return 71;}
+		}   
    
    		return turret.fnt;
    }
@@ -243,7 +247,11 @@ int tankData::gtAFnt45(char l){
 		   		if(name.c_str() == "PzKw_VI_Tiger_I"){
    			int x = choose();
 			   if(x==0){return 360;}else{return 182;}
-		}    
+		}  
+		   		if(name.c_str() == "PzKw_IIIj"){
+   			int x = choose();
+			   if(x==0){return 172;}else{return 117;}
+		}     
    		return turret.fnt45;
 		   
 	}
