@@ -14,6 +14,23 @@ struct chooseStruct{
 	pts = pt;
 	dataElement = de;
 	}    
+	
+	chooseStruct(const chooseStruct& cs){
+		name = cs.name;
+		place = cs.place;
+		pts = cs.pts;
+		dataElement = cs.dataElement;
+		
+	}
+	
+	chooseStruct& operator=(const chooseStruct cs){
+		name = cs.name;
+		place = cs.place;
+		pts = cs.pts;
+		dataElement = cs.dataElement;
+				
+		return *this;
+	}
     
 };
 

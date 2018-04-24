@@ -18,9 +18,8 @@ extern bool AI;
 
 extern std::vector<tankData>data;
 
-std::vector<int>p1chosen;
-std::vector<int>p2chosen;
-
+std::vector<chooseStruct> p1chosen;
+std::vector<chooseStruct> p2chosen;
 std::vector<chooseStruct> cs; 
 
 
@@ -91,9 +90,10 @@ BOOL    CALLBACK chooseProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){
         if(manage->gtWhoCurent() == 1){
 			 manage->swap(); 
 		}
+			 	 
           if(!p1chosen.empty()){
            	for(int l = 0; l != p1chosen.size(); l++){		
-		  		makeTank(p1chosen[l]);	  		
+		  		makeTank(p1chosen[l].dataElement);	  		
 			}
 		  EndDialog(hwnd, IDOK);
 		}
@@ -114,16 +114,15 @@ BOOL    CALLBACK chooseProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){
 				   if(temp < 0){MessageBox(NULL, "Infsfficent Points!" , "Warning!" , MB_OK);}         
                    else{
 				      plPoints1 = temp;                               
-                      int choice = cs[chItem].dataElement;
+                      chooseStruct choice = cs[chItem];
                       p1chosen.push_back(choice); 
                       
                       const char * chName = cs[chItem].name;
                       
-                      SendMessage(chsTnks, LB_ADDSTRING , 0,
-                      (LPARAM) chName);  
+                     SendMessage(chsTnks, LB_ADDSTRING , 0, (LPARAM) chName);  
     	
-      				SendMessage(chsTnks, WM_SETREDRAW, TRUE, 0L);   
-                    InvalidateRect(hwnd,NULL,TRUE);           
+      				 SendMessage(chsTnks, WM_SETREDRAW, TRUE, 0L);   
+                     InvalidateRect(hwnd,NULL,TRUE);           
 				   }	
 				}
 				       
@@ -134,19 +133,23 @@ BOOL    CALLBACK chooseProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){
         
         case IDC_CHTNKLIST:
            switch(HIWORD(wp)){
-                              
+                            
               case LBN_SELCHANGE:{
+              	   int i;
                    HWND chsTnks = GetDlgItem(hwnd, IDC_CHTNKLIST); 
                    int chItem = (int)SendMessage(chsTnks, LB_GETCURSEL,0,0); 
-                   int i = (int)SendMessage(chsTnks, LB_GETITEMDATA, chItem,0); 
-                   
-                   int place = p1chosen[chItem]+1; 		   
+                   if(chItem > 1){				
+                      i = 1+(int)SendMessage(chsTnks, LB_GETITEMDATA, chItem,0); 
+                  }else {
+                  		i = (int)SendMessage(chsTnks, LB_GETITEMDATA, chItem,0); 
+				  }
+                   		   
 				   SendMessage(chsTnks, LB_DELETESTRING, i, 0); 
 				 				   
-				   plPoints1 = plPoints1 + cs[place].pts; 
+				   plPoints1 = plPoints1 + p1chosen[chItem].pts; 
 				   p1chosen.erase(p1chosen.begin()+chItem);
 				       
-				   InvalidateRect(hwnd,NULL,TRUE);          
+				  InvalidateRect(hwnd,NULL,TRUE);          
               }
            break;         
            } 
@@ -219,7 +222,7 @@ BOOL    CALLBACK chooseProc2(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){
     	
         switch(LOWORD(wp)){    
         case IDOK:
-         
+      
 		 if(manage->gtWhoCurent() == 2){
 			 manage->swap(); 
 		}
@@ -227,19 +230,19 @@ BOOL    CALLBACK chooseProc2(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){
 		  
           if(!p2chosen.empty()){
            	for(int l = 0; l != p2chosen.size(); l++){		
-		  		makeTank(p2chosen[l]);	  		
+		  		makeTank(p2chosen[l].dataElement);;	  		
 			}
 			EndDialog(hwnd, IDOK);
 		}
 	      
         break;
-    
+
         case IDC_AVTNKLIST:
         	
            switch(HIWORD(wp)){
                               
               case LBN_SELCHANGE:{
-              	
+            	
                    HWND avlTnks = GetDlgItem(hwnd, IDC_AVTNKLIST);                  
                    int chItem = (int)SendMessage(avlTnks, LB_GETCURSEL,0,0);
                    int i = (int)SendMessage(avlTnks, LB_GETITEMDATA, chItem,0); 
@@ -249,17 +252,17 @@ BOOL    CALLBACK chooseProc2(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){
 				   if(temp < 0){MessageBox(NULL, "Infsfficent Points!" , "Warning!" , MB_OK);}         
                    else{
 				      plPoints2 = temp;                               
-                      int choice = cs[chItem].dataElement;
+                      chooseStruct choice = cs[chItem];
                       p2chosen.push_back(choice); 
                       
                       const char * chName = cs[chItem].name;
                       
-                      SendMessage(chsTnks, LB_ADDSTRING , 0,
-                      (LPARAM) chName);  
+                      SendMessage(chsTnks, LB_ADDSTRING , 0, (LPARAM) chName);  
     	
-      				SendMessage(chsTnks, WM_SETREDRAW, TRUE, 0L);   
-                    InvalidateRect(hwnd,NULL,TRUE);           
-				   }	   
+      				  SendMessage(chsTnks, WM_SETREDRAW, TRUE, 0L);   
+                      InvalidateRect(hwnd,NULL,TRUE);  
+					       
+				   }	 
 				}
 				       
               return true;                  
@@ -269,28 +272,29 @@ BOOL    CALLBACK chooseProc2(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp){
        
         case IDC_CHTNKLIST:
            switch(HIWORD(wp)){
-                              
+                             
               case LBN_SELCHANGE:{
+              	   int i;
                    HWND chsTnks = GetDlgItem(hwnd, IDC_CHTNKLIST); 
                    int chItem = (int)SendMessage(chsTnks, LB_GETCURSEL,0,0); 
-                   int i = (int)SendMessage(chsTnks, LB_GETITEMDATA, chItem,0); 
-                   
-                   int place = p2chosen[chItem]+1; 		   
+                   if(chItem > 1){				
+                      i = 1+(int)SendMessage(chsTnks, LB_GETITEMDATA, chItem,0); 
+                  }else {
+                  		i = (int)SendMessage(chsTnks, LB_GETITEMDATA, chItem,0); 
+				  }
+                   		   
 				   SendMessage(chsTnks, LB_DELETESTRING, i, 0); 
 				 				   
-				   plPoints2 = plPoints2 + cs[place].pts; 
+				   plPoints2 = plPoints2 + p2chosen[chItem].pts; 
 				   p2chosen.erase(p2chosen.begin()+chItem);
 				       
-				   InvalidateRect(hwnd,NULL,TRUE);          
-              }
+				  InvalidateRect(hwnd,NULL,TRUE);          				        
+              } 
            break;          
            }  
         }  
   }
   return FALSE;   
             
-
-
-
 }    
 
